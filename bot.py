@@ -40,7 +40,7 @@ def webhook():
             else:
                 print("[X]", timestamp, "Alert Received & Refused! (Wrong Key)")
                 return "Refused alert", 400
-        else if request.method == "GET":
+        if request.method == "GET":
             return "OK", 200
 
     except Exception as e:
