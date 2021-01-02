@@ -34,11 +34,9 @@ def main():
                     print(timestamp, "Alert Received & Sent!")
                     tg_bot = Bot(token=TOKEN)
                     try:
-                        tg_bot.sendMessage(
-                            data["telegram"], data["msg"], parse_mode="MARKDOWN"
-                        )
+                        tg_bot.sendMessage(data["telegram"], data["msg"])
                     except KeyError:
-                        tg_bot.sendMessage(CHATID, data["msg"], parse_mode="MARKDOWN")
+                        tg_bot.sendMessage(CHATID, data["msg"])
                     except Exception as e:
                         print("[X] Telegram Error:\n>", e)
                     return "Sent alert", 200
