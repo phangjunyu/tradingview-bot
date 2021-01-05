@@ -10,17 +10,19 @@ from datetime import datetime
 
 from telegram import Bot
 
-TOKEN = os.environ.get("TOKEN")
 PORT = int(os.environ.get("PORT", "8080"))
+
+TOKEN = os.environ.get("TOKEN")
 KEY = os.environ.get("KEY")
 CHATID = os.environ.get("CHATID")
+TD-TOKEN = os.environ.get("TD-TOKEN")
 
 now = datetime.now()
 timestamp = now.strftime("%Y-%m-%d %X")
 app = Flask(__name__)
 
 
-@app.route("/webhook", methods=["POST", "GET"])
+@app.route("/webhook", methods=["POST"])
 def webhook():
     try:
         if request.method == "POST":
@@ -60,8 +62,6 @@ def webhook():
             else:
                 print("[X]", timestamp, "Alert Received & Refused! (Wrong Key)")
                 return "Refused alert", 400
-        if request.method == "GET":
-            return "OK", 200
 
     except Exception as e:
         print("[X]", timestamp, "Error:\n>", e)
