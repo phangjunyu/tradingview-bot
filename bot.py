@@ -47,7 +47,7 @@ def webhook():
                     msg = (
                         "Order "
                         + data["action"]
-                        + "/n"
+                        + "\n"
                         + data["qty"]
                         + " of "
                         + data["ticker"]
