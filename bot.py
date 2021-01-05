@@ -15,7 +15,7 @@ PORT = int(os.environ.get("PORT", "8080"))
 TOKEN = os.environ.get("TOKEN")
 KEY = os.environ.get("KEY")
 CHATID = os.environ.get("CHATID")
-TD-TOKEN = os.environ.get("TD-TOKEN")
+TD_TOKEN = os.environ.get("TD-TOKEN")
 
 now = datetime.now()
 timestamp = now.strftime("%Y-%m-%d %X")
