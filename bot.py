@@ -30,8 +30,28 @@ def webhook():
                 print(timestamp, "Alert Received & Sent!")
                 tg_bot = Bot(token=TOKEN)
                 try:
-                    tg_bot.sendMessage(data["telegram"], data["msg"])
+                    msg = (
+                        "Order "
+                        + data["action"]
+                        + "/n"
+                        + data["qty"]
+                        + " of "
+                        + data["ticker"]
+                        + ". Current Position is "
+                        + data["position"]
+                    )
+                    tg_bot.sendMessage(data["telegram"], msg)
                 except KeyError:
+                    msg = (
+                        "Order "
+                        + data["action"]
+                        + "/n"
+                        + data["qty"]
+                        + " of "
+                        + data["ticker"]
+                        + ". Current Position is "
+                        + data["position"]
+                    )
                     tg_bot.sendMessage(CHATID, data["msg"])
                 except Exception as e:
                     print("[X] Telegram Error:\n>", e)
