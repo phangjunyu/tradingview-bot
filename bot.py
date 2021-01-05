@@ -22,7 +22,7 @@ timestamp = now.strftime("%Y-%m-%d %X")
 app = Flask(__name__)
 
 
-@app.route("/webhook", methods=["POST"])
+@app.route("/webhook", methods=["POST", "GET"])
 def webhook():
     try:
         if request.method == "POST":
@@ -62,6 +62,8 @@ def webhook():
             else:
                 print("[X]", timestamp, "Alert Received & Refused! (Wrong Key)")
                 return "Refused alert", 400
+        if request.method == "GET":
+            return "OK", 200
 
     except Exception as e:
         print("[X]", timestamp, "Error:\n>", e)
