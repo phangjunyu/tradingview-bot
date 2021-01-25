@@ -94,7 +94,7 @@ def setup(token):
 
 @app.route("/<string:param>", methods=["POST", "GET"])
 def tele_message(param):
-    if escape(param) == TOKEN:
+    if param == TOKEN:
         try:
             if request.method == "POST":
                 data = request.get_json()
