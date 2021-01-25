@@ -9,14 +9,16 @@ import json
 from datetime import datetime
 import logging
 
+from queue import Queue
+from threading import Thread
 from telegram import Bot
 from telegram import Update
 from telegram.ext import (
-    Updater,
     CommandHandler,
     MessageHandler,
     Filters,
     CallbackContext,
+    Dispatcher,
 )
 from binance.client import Client
 from binance.enums import *
@@ -51,21 +53,16 @@ def echo(update: Update, context: CallbackContext) -> None:
     update.message.reply_text(update.message.text)
 
 
-def main():
-    serve(app, host="0.0.0.0", port=int(PORT))
+def setup(token):
+    # Create bot, update queue and dispatcher instances
+    bot = Bot(token)
+    update_queue = Queue()
 
-    """Start the bot."""
-    # Create the Updater and pass it your bot's token.
-    # Make sure to set use_context=True to use the new context based callbacks
-    # Post version 12 this will no longer be necessary
-    updater = Updater(TOKEN, use_context=True)
+    dispatcher = Dispatcher(bot, update_queue)
 
-    # Get the dispatcher to register handlers
-    dispatcher = updater.dispatcher
-
+    ##### Register handlers here #####
     # on different commands - answer in Telegram
     dispatcher.add_handler(CommandHandler("start", start))
-    dispatcher.add_handler(CommandHandler("help", help_command))
     dispatcher.add_handler(CommandHandler("test_order", test_order_command))
 
     # on noncommand i.e message - echo the message on Telegram
@@ -74,14 +71,23 @@ def main():
     # add error_handlers
     dispatcher.add_error_handler(error)
 
-    # Start the Bot
-    updater.start_webhook(listen="0.0.0.0", port=int(PORT), url_path=TOKEN)
-    updater.bot.setWebhook("https://tradingview-trading-bot.herokuapp.com/" + TOKEN)
+    # Start the thread
+    thread = Thread(target=dispatcher.start, name="dispatcher")
+    thread.start()
 
-    # Run the bot until you press Ctrl-C or the process receives SIGINT,
-    # SIGTERM or SIGABRT. This should be used most of the time, since
-    # start_polling() is non-blocking and will stop the bot gracefully.
-    updater.idle()
+    return update_queue, dispatcher
+    # you might want to return dispatcher as well,
+    # to stop it at server shutdown, or to register more handlers:
+    # return (update_queue, dispatcher)
+
+
+def webhook(update):
+    update_queue.put(update)
+
+
+def main():
+    update_queue, dispatcher = setup(token=TOKEN)
+    serve(app, host="0.0.0.0", port=int(PORT))
 
     @app.route("/webhook", methods=["POST", "GET"])
     def webhook():
@@ -91,7 +97,7 @@ def main():
                 key = data["key"]
                 if key == KEY:
                     print(timestamp, "Alert Received & Sent!")
-                    tg_bot = Bot(token=TOKEN)
+
                     try:
                         tg_bot.sendMessage(data["telegram"], data["msg"])
                     except KeyError:
