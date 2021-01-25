@@ -94,7 +94,9 @@ def tele_message(param):
             if request.method == "POST":
                 data = request.get_json()
                 # do verification check here
-                dispatcher.process_update(Update.de_json(json.dumps(data), bot))
+                dispatcher.process_update(
+                    Update.de_json(json.dumps(data), dispatcher.bot)
+                )
                 return "Message received", 200
             if request.method == "GET":
                 return "HELLO WORLD", 200
