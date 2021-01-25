@@ -51,7 +51,6 @@ def start(update: Update, context: CallbackContext) -> None:
 
 def echo(update: Update, context: CallbackContext) -> None:
     """Echo the user message."""
-    print("echo?")
     update.message.reply_text(update.message.text)
 
 
@@ -95,8 +94,7 @@ def tele_message(param):
             if request.method == "POST":
                 data = request.get_json()
                 # do verification check here
-                print("data:", data)
-                dispatcher.process_update(json.dumps(data))
+                dispatcher.process_update(Update.de_json(json.loads(text), bot))
                 return "Message received", 200
             if request.method == "GET":
                 return "HELLO WORLD", 200
