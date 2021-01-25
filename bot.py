@@ -94,6 +94,8 @@ def tele_message(param):
             if request.method == "POST":
                 data = request.get_json()
                 # do verification check here
+                print("json.dumps: ", json.dumps(data))
+                print("dejson:", Update.de_json(json.dumps(data), dispatcher.bot))
                 dispatcher.process_update(
                     Update.de_json(json.dumps(data), dispatcher.bot)
                 )
