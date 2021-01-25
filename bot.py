@@ -53,7 +53,7 @@ def echo(update: Update, context: CallbackContext) -> None:
     update.message.reply_text(update.message.text)
 
 
-def start(update: Update, context: CallbackContext) -> None:
+def test_order_command(update: Update, context: CallbackContext) -> None:
     """Send a message when the command /start is issued."""
     update.message.reply_text("Test Order")
 
