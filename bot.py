@@ -99,20 +99,21 @@ def main():
     print("path is:", "/" + TOKEN)
     sys.stdout.flush()
 
-    @app.route("/" + TOKEN, methods=["POST", "GET"])
+    @app.route("/<string:token>", methods=["POST", "GET"])
     def tele_message():
-        try:
-            if request.method == "POST":
-                data = request.get_json()
-                # do verification check here
-                update_queue.put(data)
-                return "Message received", 200
-            if request.method == "GET":
-                return "HELLO WORLD", 200
+        if escape(token) == TOKEN:
+            try:
+                if request.method == "POST":
+                    data = request.get_json()
+                    # do verification check here
+                    update_queue.put(data)
+                    return "Message received", 200
+                if request.method == "GET":
+                    return "HELLO WORLD", 200
 
-        except Exception as e:
-            print("[X]", timestamp, "Error:\n>", e)
-            return "Error", 400
+            except Exception as e:
+                print("[X]", timestamp, "Error:\n>", e)
+                return "Error", 400
 
     @app.route("/webhook", methods=["POST", "GET"])
     def webhook():
