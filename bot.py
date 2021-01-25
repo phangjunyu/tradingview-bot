@@ -107,7 +107,7 @@ def tele_message(param):
         except Exception as e:
             print("[X]", timestamp, "Error:\n>", e)
             return "Error", 400
-    if escape(token) == "webhook":
+    if param == "webhook":
         try:
             if request.method == "POST":
                 data = request.get_json()
