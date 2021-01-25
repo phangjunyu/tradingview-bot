@@ -67,9 +67,8 @@ def error(update, context):
 def setup(token):
     # Create bot, update queue and dispatcher instances
     bot = Bot(token)
-    update_queue = Queue()
 
-    dispatcher = Dispatcher(bot, update_queue)
+    dispatcher = Dispatcher(bot, None, workers=0)
 
     ##### Register handlers here #####
     # on different commands - answer in Telegram
@@ -82,11 +81,7 @@ def setup(token):
     # add error_handlers
     dispatcher.add_error_handler(error)
 
-    # Start the thread
-    thread = Thread(target=dispatcher.start, name="dispatcher")
-    thread.start()
-
-    return (update_queue, dispatcher)
+    return dispatcher
     # you might want to return dispatcher as well,
     # to stop it at server shutdown, or to register more handlers:
     # return (update_queue, dispatcher)
@@ -99,8 +94,7 @@ def tele_message(param):
             if request.method == "POST":
                 data = request.get_json()
                 # do verification check here
-                update_queue.put(data)
-                print("data:", data)
+                dispatcher.process_update(data)
                 return "Message received", 200
             if request.method == "GET":
                 return "HELLO WORLD", 200
@@ -138,8 +132,5 @@ def tele_message(param):
 if __name__ == "__main__":
     update_queue, dispatcher = setup(token=TOKEN)
     serve(app, host="0.0.0.0", port=int(PORT))
-
-    print("path is:", "/" + TOKEN)
-    sys.stdout.flush()
 
     client = Client(BINANCE_API_KEY, BINANCE_SECRET_KEY)
