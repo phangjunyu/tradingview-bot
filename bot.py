@@ -58,6 +58,11 @@ def test_order_command(update: Update, context: CallbackContext) -> None:
     update.message.reply_text("Test Order")
 
 
+def error(update, context):
+    """Log Errors caused by Updates."""
+    logger.warning('Update "%s" caused error "%s"', update, context.error)
+
+
 def setup(token):
     # Create bot, update queue and dispatcher instances
     bot = Bot(token)
