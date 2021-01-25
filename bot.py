@@ -92,56 +92,53 @@ def setup(token):
     # return (update_queue, dispatcher)
 
 
-def main():
+@app.route("/<string:token>", methods=["POST", "GET"])
+def tele_message():
+    if escape(token) == TOKEN:
+        try:
+            if request.method == "POST":
+                data = request.get_json()
+                # do verification check here
+                update_queue.put(data)
+                return "Message received", 200
+            if request.method == "GET":
+                return "HELLO WORLD", 200
+
+        except Exception as e:
+            print("[X]", timestamp, "Error:\n>", e)
+            return "Error", 400
+    if escape(token) == "webhook":
+        try:
+            if request.method == "POST":
+                data = request.get_json()
+                key = data["key"]
+                if key == KEY:
+                    print(timestamp, "Alert Received & Sent!")
+
+                    try:
+                        tg_bot.sendMessage(data["telegram"], data["msg"])
+                    except KeyError:
+                        tg_bot.sendMessage(CHATID, data["msg"])
+                    except Exception as e:
+                        print("[X] Telegram Error:\n>", e)
+                    return "Sent alert", 200
+
+                else:
+                    print("[X]", timestamp, "Alert Received & Refused! (Wrong Key)")
+                    return "Refused alert", 400
+            if request.method == "GET":
+                return "OK", 200
+
+        except Exception as e:
+            print("[X]", timestamp, "Error:\n>", e)
+            return "Error", 400
+
+
+if __name__ == "__main__":
     update_queue, dispatcher = setup(token=TOKEN)
     serve(app, host="0.0.0.0", port=int(PORT))
 
     print("path is:", "/" + TOKEN)
     sys.stdout.flush()
 
-    @app.route("/<string:token>", methods=["POST", "GET"])
-    def tele_message():
-        if escape(token) == TOKEN:
-            try:
-                if request.method == "POST":
-                    data = request.get_json()
-                    # do verification check here
-                    update_queue.put(data)
-                    return "Message received", 200
-                if request.method == "GET":
-                    return "HELLO WORLD", 200
-
-            except Exception as e:
-                print("[X]", timestamp, "Error:\n>", e)
-                return "Error", 400
-        if escape(token) == "webhook":
-            try:
-                if request.method == "POST":
-                    data = request.get_json()
-                    key = data["key"]
-                    if key == KEY:
-                        print(timestamp, "Alert Received & Sent!")
-
-                        try:
-                            tg_bot.sendMessage(data["telegram"], data["msg"])
-                        except KeyError:
-                            tg_bot.sendMessage(CHATID, data["msg"])
-                        except Exception as e:
-                            print("[X] Telegram Error:\n>", e)
-                        return "Sent alert", 200
-
-                    else:
-                        print("[X]", timestamp, "Alert Received & Refused! (Wrong Key)")
-                        return "Refused alert", 400
-                if request.method == "GET":
-                    return "OK", 200
-
-            except Exception as e:
-                print("[X]", timestamp, "Error:\n>", e)
-                return "Error", 400
-
-
-client = Client(BINANCE_API_KEY, BINANCE_SECRET_KEY)
-
-if __name__ == "__main__":
-    main()
+    client = Client(BINANCE_API_KEY, BINANCE_SECRET_KEY)
