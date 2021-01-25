@@ -91,13 +91,25 @@ def setup(token):
     # return (update_queue, dispatcher)
 
 
-def webhook(update):
-    update_queue.put(update)
-
-
 def main():
     update_queue, dispatcher = setup(token=TOKEN)
     serve(app, host="0.0.0.0", port=int(PORT))
+
+    @app.route("/" + TOKEN, method=["POST"])
+    def tele_message():
+        try:
+            if request.method == "POST":
+                data = request.get_json()
+                # do verification check here
+                update_queue.put(data)
+                return "Message received", 200
+            else:
+                print("[X]", timestamp, "Error")
+                return "Refused request", 400
+
+        except Exception as e:
+            print("[X]", timestamp, "Error:\n>", e)
+            return "Error", 400
 
     @app.route("/webhook", methods=["POST", "GET"])
     def webhook():
