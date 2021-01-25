@@ -95,7 +95,9 @@ def main():
     update_queue, dispatcher = setup(token=TOKEN)
     serve(app, host="0.0.0.0", port=int(PORT))
 
-    @app.route("/" + TOKEN, method=["POST"])
+    print("path is:", "/" + TOKEN)
+
+    @app.route("/" + TOKEN, methods=["POST", "GET"])
     def tele_message():
         try:
             if request.method == "POST":
@@ -103,9 +105,8 @@ def main():
                 # do verification check here
                 update_queue.put(data)
                 return "Message received", 200
-            else:
-                print("[X]", timestamp, "Error")
-                return "Refused request", 400
+            if request.method == "GET":
+                return "HELLO WORLD", 200
 
         except Exception as e:
             print("[X]", timestamp, "Error:\n>", e)
