@@ -86,7 +86,7 @@ def setup(token):
     thread = Thread(target=dispatcher.start, name="dispatcher")
     thread.start()
 
-    return update_queue, dispatcher
+    return (update_queue, dispatcher)
     # you might want to return dispatcher as well,
     # to stop it at server shutdown, or to register more handlers:
     # return (update_queue, dispatcher)
@@ -100,6 +100,7 @@ def tele_message(param):
                 data = request.get_json()
                 # do verification check here
                 update_queue.put(data)
+                print("data:", data)
                 return "Message received", 200
             if request.method == "GET":
                 return "HELLO WORLD", 200
