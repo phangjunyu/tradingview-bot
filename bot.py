@@ -8,6 +8,7 @@ import json
 
 from datetime import datetime
 import logging
+import sys
 
 from queue import Queue
 from threading import Thread
@@ -96,6 +97,7 @@ def main():
     serve(app, host="0.0.0.0", port=int(PORT))
 
     print("path is:", "/" + TOKEN)
+    sys.stdout.flush()
 
     @app.route("/" + TOKEN, methods=["POST", "GET"])
     def tele_message():
