@@ -53,6 +53,11 @@ def echo(update: Update, context: CallbackContext) -> None:
     update.message.reply_text(update.message.text)
 
 
+def start(update: Update, context: CallbackContext) -> None:
+    """Send a message when the command /start is issued."""
+    update.message.reply_text("Test Order")
+
+
 def setup(token):
     # Create bot, update queue and dispatcher instances
     bot = Bot(token)
