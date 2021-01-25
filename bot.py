@@ -92,9 +92,9 @@ def setup(token):
     # return (update_queue, dispatcher)
 
 
-@app.route("/<string:token>", methods=["POST", "GET"])
-def tele_message():
-    if escape(token) == TOKEN:
+@app.route("/<string:param>", methods=["POST", "GET"])
+def tele_message(param):
+    if escape(param) == TOKEN:
         try:
             if request.method == "POST":
                 data = request.get_json()
