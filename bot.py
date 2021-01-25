@@ -130,7 +130,7 @@ def tele_message(param):
 
 
 if __name__ == "__main__":
-    update_queue, dispatcher = setup(token=TOKEN)
+    dispatcher = setup(token=TOKEN)
     serve(app, host="0.0.0.0", port=int(PORT))
 
     client = Client(BINANCE_API_KEY, BINANCE_SECRET_KEY)
