@@ -29,7 +29,6 @@ def binance_report(client):
     for asset in ["BTC", "ETH", "DAI"]:
         _b = _readable(client.get_asset_balance(asset))
         update += _b + "\n\n"
-    print("update:", update)
     return update
 
 
