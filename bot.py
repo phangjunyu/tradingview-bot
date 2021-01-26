@@ -27,7 +27,7 @@ app = Flask(__name__)
 def binance_report(client):
     update = ""
     for asset in ["BTC", "ETH", "DAI"]:
-        _b = client.get_asset_balance(asset)
+        _b = _readable(client.get_asset_balance(asset))
         update += _b + "\n\n"
     print("update:", update)
     return update
