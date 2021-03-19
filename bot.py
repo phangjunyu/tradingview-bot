@@ -61,10 +61,10 @@ def webhook():
                 tg_bot = Bot(token=TOKEN)
                 try:
                     tg_bot.sendMessage(data["telegram"], data["msg"])
-                    tg_bot.sendMessage(data["telegram"], binance_report(client))
+                    # tg_bot.sendMessage(data["telegram"], binance_report(client))
                 except KeyError:
                     tg_bot.sendMessage(CHATID, data["msg"])
-                    tg_bot.sendMessage(CHATID, binance_report(client))
+                    # tg_bot.sendMessage(CHATID, binance_report(client))
                 except Exception as e:
                     print("[X] Telegram Error:\n>", e)
                 return "Sent alert", 200
